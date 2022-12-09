@@ -5,6 +5,15 @@
   <div id="app">
         <div class="leftTab">
             <h1>Input Table</h1>
+            <h3>Enter PM: {{picked}}</h3>
+            <div class="radioGroup form-check">
+              <input class="form-check-input" type="radio" value="Npm" id="npm" v-model="picked" />
+              <label class="form-check-label" for="npm">Npm</label>
+            </div>
+            <div class="radioGroup form-check">
+              <input class="form-check-input" type="radio" value="Pip" id="pip" v-model="picked" />
+              <label class="form-check-label" for="pip">Pip</label>
+            </div>
             <input v-model.trim="packageName" class="form-control" type="text">
             <button v-on:click="searchPackage(packageName)" class="search btn btn-success">search</button>
         </div>   
@@ -37,6 +46,7 @@ export default {
     return {
       visible: false,
       visibleDeps: false,
+      picked: 'Npm',
       msg: 'Enter package name and click search!',
       packName: 'Enter package name..',
       packageManager: '',
@@ -60,7 +70,8 @@ export default {
         this.msg = 'Empty package name line!'
         return
       }
-      try{
+      if (this.picked === 'Npm') {
+        try{
         let res = await fetch(`https://registry.npmjs.org/${packageName.toLowerCase()}/latest`);
         let info = await res.json()
         this.packName = info.name;
@@ -80,6 +91,12 @@ export default {
         console.log(info)
       }
       catch(e) {
+          this.msg = "Couldn't find this package!"
+          this.visible = false
+          this.visibleDeps = false
+        }
+      }
+      else {
         try {
           let res = await fetch(`https://pypi.org/pypi/${packageName.toLowerCase()}/json`);
           let info = await res.json();
@@ -157,6 +174,7 @@ export default {
   flex-direction: column;
   justify-items: left;
 }
+
 .item {
   width: 30%;
   margin: 1% 0 1% 0;

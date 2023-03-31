@@ -3,5 +3,5 @@ module.exports = defineConfig({
   publicPath: process.env.NODE_ENV === 'production' 
   ? '/packinfovue/' 
   : '/',
-  //transpileDependencies: true
+  transpileDependencies: true
 })
